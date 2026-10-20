@@ -1,42 +1,17 @@
-cat > app.py << 'EOF'
-from flask import Flask, send_file, request, redirect
-import os
-app = Flask(__name__)
-COMMENTS_FILE = "commentaires.txt"
-if not os.path.exists(COMMENTS_FILE):
-    open(COMMENTS_FILE, "w").write("Admin: Bienvenue sur BLEU-AV 2027 🔵\n")
-def get_comments():
-    with open(COMMENTS_FILE, "r") as f:
-        return f.read().splitlines()[-20:][::-1]
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def home():
-    if request.method == 'POST':
-        nom = request.form.get('nom','Anonyme')[:20]
-        msg = request.form.get('msg','')[:150]
-        if msg:
-            with open(COMMENTS_FILE, "a") as f:
-                f.write(f"{nom}: {msg}\n")
-        return redirect('/')
-    comms = get_comments()
-    html_comms = "".join([f"<div style='background:#111;padding:8px;margin:5px 0;border-radius:8px;text-align:left;border-left:3px solid #0055ff'>💬 {c}</div>" for c in comms])
-    return f'''
+    return """
+    <html><head><meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>BLEU-AV OFFICIEL</title></head>
     <body style="background:#000;color:#fff;text-align:center;font-family:Arial;padding:20px">
-    <h1>🔵 BLEU-AV 2027 OFFICIEL 🔵</h1>
-    <a href="/download" style="background:#0055ff;color:#fff;padding:18px 35px;font-size:18px;border-radius:12px;display:inline-block;text-decoration:none;margin:15px;font-weight:bold">TELECHARGER APK 🔥</a>
-    <div style="max-width:400px;margin:20px auto;background:#1a1a1a;padding:15px;border-radius:12px">
-    <h3>💬 Commentaires</h3>
-    <form method="POST" style="margin-bottom:15px">
-    <input name="nom" placeholder="Ton nom" style="width:30%;padding:8px;border-radius:5px;border:none">
-    <input name="msg" placeholder="Ton commentaire..." style="width:55%;padding:8px;border-radius:5px;border:none" required>
-    <button style="padding:8px;background:#0055ff;color:#fff;border:none;border-radius:5px">Envoyer</button>
-    </form>
-    {html_comms}
+    <h1>🔵 BLEU-AV OFFICIEL 🔵</h1>
+    <p>Plate-forme de sécurisation</p>
+    <div style="background:#0055ff;color:#fff;padding:20px;border-radius:15px;margin:20px auto;max-width:400px">
+    <h2>VERSION WEB 2027</h2>
+    <p>Plus besoin de télécharger d'APK!</p>
+    <p>Clique sur les 3 points > Ajouter à l'écran d'accueil</p>
     </div>
-    </body>
-    '''
-@app.route('/download')
-def dl():
-    return send_file("bleu-av-2027.apk", as_attachment=True)
-app.run(host='0.0.0.0', port=5000)
-EOF
-python app.py
+    <p style="color:#00ff88">✅ Site officiel sécurisé</p>
+    <p>Créé à Lomé 🇹🇬</p>
+    </body></html>
+    """
